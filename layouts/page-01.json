@@ -1,0 +1,50 @@
+{
+  "page": {
+    "unit": "in",
+    "width": 6.625,
+    "height": 10.25,
+    "dpi": 150,
+    "bleed": 0.125,
+    "margin": 0.375,
+    "gutter": 0.1875
+  },
+  "panels": [
+    {
+      "id": "qm3ssvb",
+      "x": 75,
+      "y": 75,
+      "w": 427,
+      "h": 699,
+      "notes": "",
+      "strokes": []
+    },
+    {
+      "id": "u6rldgn",
+      "x": 530,
+      "y": 75,
+      "w": 427,
+      "h": 699,
+      "notes": "",
+      "strokes": []
+    },
+    {
+      "id": "nd2lczd",
+      "x": 75,
+      "y": 802,
+      "w": 427,
+      "h": 699,
+      "notes": "",
+      "strokes": []
+    },
+    {
+      "id": "q6tni2r",
+      "x": 530,
+      "y": 802,
+      "w": 427,
+      "h": 699,
+      "notes": "",
+      "strokes": []
+    }
+  ],
+  "balloons": []
+}
