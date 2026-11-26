@@ -5,26 +5,20 @@ A lightweight, zero-dependency comic book rough layout, thumbnailing, and letter
 ## Features
 
 - Exact Custom Page Dimensions: Configure custom decimal widths and heights in Inches (in), Millimeters (mm), or Pixels (px), set custom DPI/PPI, and define exact Bleed, Safe Margin, and Panel Gutter measurements.
-- Desktop Menu Bar & Shortcuts: Full File, Edit, View, and GitHub menus with keyboard shortcuts (`Ctrl/Cmd+O`, `Ctrl/Cmd+S`, `Ctrl/Cmd+E`, `Ctrl/Cmd+Z`, `Ctrl/Cmd+Shift+Z`, `Ctrl/Cmd+D`, `Ctrl/Cmd++`, `Ctrl/Cmd+-`, `Ctrl/Cmd+0`, `Ctrl/Cmd+1`).
-- Zoom & Pan Viewport: Zoom smoothly from 15% to 400%, use Fit-to-Window or preset zoom levels, `Ctrl/Cmd + Scroll` wheel zoom, and hold `Space + Drag` (or middle-mouse drag) to pan.
-- Context-Sensitive Right-Click Menus: Right-click any Word Balloon, Panel, or the Canvas for instant context actions.
-- Dynamic Panel Grid & Frame Editor: Generate 1- to 9-panel layouts, split panels horizontally or vertically, add floating inset panels, drag-to-reposition or resize frames, and attach per-panel shot/script notes.
-- Clipped Per-Panel Rough Sketching: Sketch rough thumbnails with Non-Photo Blue (`#4da6ff`), Layout Red, Graphite, Ink Black, or custom swatches using the Pencil, Straight Line, Box, Oval, and Eraser tools—automatically clipped inside the active panel borders.
-- Dial-In Word Balloons with Bendable Tails: Place Speech Balloons, Thought Clouds, Shout Bursts, and Narrative Caption Boxes. Aim tails using the canvas tip handle or polar angle/reach inputs, and bend or bow tails smoothly along a quadratic Bezier curve using the amber midpoint diamond or the Tail Bend slider.
-- Built-In GitHub Direct Sync: Save a GitHub Personal Access Token locally in your browser and push updated `index.html` builds or comic layout `.json` files directly to your GitHub repository.
-
-## Quick Start
-
-1. Clone or download this repository.
-2. Open `index.html` directly in any modern browser, or host it free on GitHub Pages.
+- Copy, Paste & Duplicate Elements: Copy and paste drawings (even across different panels), word balloons, or entire panels using Ctrl/Cmd+C, Ctrl/Cmd+V, Ctrl/Cmd+D, the Edit menu, or right-click context menus.
+- Select, Move & Drag-Resize Drawings: Switch to Select / Resize Art mode (or press Ctrl/Cmd+A inside a panel) to click or marquee-select sketch strokes and resize or reposition them with 8-point bounding box handles.
+- Drag-Resizable Word Balloons with Bendable Tails: Click any Speech Balloon, Thought Cloud, Shout Burst, or Caption Box and drag its 8 corner/edge handles directly on the canvas to resize. Aim tails with the blue tip handle and curve them along a quadratic Bezier spine using the amber midpoint diamond or Tail Bend slider.
+- Desktop Menu Bar & Shortcuts: Full File, Edit, View, and GitHub menus with keyboard shortcuts (Ctrl/Cmd+C, Ctrl/Cmd+V, Ctrl/Cmd+D, Ctrl/Cmd+A, Ctrl/Cmd+O, Ctrl/Cmd+S, Ctrl/Cmd+E, Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z, Ctrl/Cmd++, Ctrl/Cmd+-, Ctrl/Cmd+0, Ctrl/Cmd+1).
+- Zoom & Pan Viewport: Zoom smoothly from 15% to 400%, use Fit-to-Window or preset zoom levels, Ctrl/Cmd + Scroll wheel zoom, and hold Space + Drag (or middle-mouse drag) to pan.
+- Built-In GitHub Direct Sync: Save a GitHub Personal Access Token locally in your browser and push updated index.html builds or comic layout .json files directly to your GitHub repository.
 
 ## Deploying to GitHub Pages
 
 1. Push this repository to GitHub.
-2. Open **Settings -> Pages** in your GitHub repository.
-3. Under **Build and deployment**, set **Source** to **Deploy from a branch**, select `main` and `/ (root)`, and click **Save**.
-4. Your live app will be published at `https://YOUR_USERNAME.github.io/comicwerx/`.
+2. Open Settings -> Pages in your GitHub repository.
+3. Under Build and deployment, set Source to Deploy from a branch, select main and / (root), and click Save.
+4. Your live app will be published at https://YOUR_USERNAME.github.io/comicwerx/.
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT License — see LICENSE for details.
