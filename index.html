@@ -18,6 +18,8 @@
       --amber: #f59e0b;
       --danger: #ef4444;
       --success: #10b981;
+      --gh-green: #238636;
+      --gh-green-hover: #2ea043;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -58,7 +60,7 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
     }
     button, select, input {
       font-family: inherit;
@@ -80,6 +82,8 @@
     button:hover { background: var(--bg-hover); }
     button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
     button.primary:hover { background: var(--accent-hover); }
+    button.gh-btn { background: var(--gh-green); border-color: var(--gh-green); color: #fff; font-weight: 600; }
+    button.gh-btn:hover { background: var(--gh-green-hover); }
     button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
     button.danger { color: #fca5a5; border-color: #7f1d1d; }
     button.danger:hover { background: #7f1d1d; color: #fff; }
@@ -136,7 +140,7 @@
       display: block;
       margin-bottom: 3px;
     }
-    input[type="number"], input[type="text"], textarea {
+    input[type="number"], input[type="text"], input[type="password"], textarea {
       width: 100%;
       background: #14171c;
     }
@@ -200,7 +204,7 @@
       background: var(--bg-panel);
       border: 1px solid var(--border);
       border-radius: 10px;
-      width: 440px;
+      width: 460px;
       max-width: 94vw;
       padding: 18px;
       display: flex;
@@ -227,12 +231,20 @@
       color: var(--text-muted);
       line-height: 1.4;
     }
+    .status-msg {
+      font-size: 11px;
+      padding: 6px 8px;
+      border-radius: 5px;
+      display: none;
+    }
+    .status-msg.ok { display: block; background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #6ee7b7; }
+    .status-msg.err { display: block; background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #fca5a5; }
   </style>
 </head>
 <body>
   <header>
     <div class="brand">
-      Comicwerx <span>v1.0</span>
+      Comicwerx <span>v1.1</span>
     </div>
     <div class="header-actions">
       <button id="btnPageSetup" title="Configure exact page dimensions">
@@ -245,13 +257,14 @@
     </div>
     <div class="header-actions">
       <label style="display:flex;align-items:center;gap:5px;margin:0;cursor:pointer;">
-        <input type="checkbox" id="chkHideBlue" /> Hide Non-Photo Blue
+        <input type="checkbox" id="chkHideBlue" /> Hide Blue
       </label>
       <button id="btnUndo">Undo</button>
       <button id="btnSaveJson">Save JSON</button>
       <button id="btnLoadJson">Load JSON</button>
       <input type="file" id="fileLoadJson" accept=".json" style="display:none" />
       <button class="primary" id="btnExportPng">Export PNG</button>
+      <button class="gh-btn" id="btnGithubModal" title="Push app updates or pages directly to GitHub">GitHub Sync</button>
     </div>
   </header>
 
@@ -477,6 +490,64 @@
     </div>
   </div>
 
+  <!-- GITHUB DIRECT SYNC MODAL -->
+  <div class="modal-backdrop" id="githubModal">
+    <div class="modal">
+      <h3>GitHub Direct Sync (Push to Repository)</h3>
+      <div class="hint">
+        Save your GitHub settings once in this browser. You can push new versions of <strong>index.html</strong> (when we update Comicwerx) or push your current comic layout <strong>.json</strong> file straight to GitHub.
+      </div>
+      <div class="row">
+        <div>
+          <label>GitHub Username</label>
+          <input type="text" id="ghOwner" placeholder="e.g., mikemilo" />
+        </div>
+        <div>
+          <label>Repository Name</label>
+          <input type="text" id="ghRepo" value="comicwerx" placeholder="comicwerx" />
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Branch</label>
+          <input type="text" id="ghBranch" value="main" />
+        </div>
+        <div>
+          <label>Personal Access Token (repo scope)</label>
+          <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" />
+        </div>
+      </div>
+      <div class="hint">
+        Need a token? Go to <strong>GitHub.com → Settings → Developer settings → Personal access tokens → Tokens (classic)</strong>, generate a token with <strong>repo</strong> checked, and paste it above. Stored only in your local browser.
+      </div>
+      <hr style="border:0;border-top:1px solid var(--border);" />
+      <div>
+        <label>1. Push App Update (index.html)</label>
+        <div class="row">
+          <input type="text" id="ghAppFileInputLabel" readonly value="Using current running app or choose new index.html..." style="color:var(--text-muted);" />
+          <button type="button" id="btnPickAppHtml" style="flex:0;white-space:nowrap;">Choose New HTML</button>
+          <input type="file" id="fileNewAppHtml" accept=".html" style="display:none" />
+        </div>
+        <div class="row" style="margin-top:6px;">
+          <input type="text" id="ghAppCommitMsg" value="Update Comicwerx app" placeholder="Commit message" />
+          <button type="button" class="gh-btn" id="btnPushAppHtml" style="flex:0;white-space:nowrap;">Push App to GitHub</button>
+        </div>
+      </div>
+      <div>
+        <label>2. Push Current Comic Layout (.json)</label>
+        <div class="row">
+          <input type="text" id="ghLayoutPath" value="layouts/page-01.json" placeholder="layouts/page-01.json" />
+          <button type="button" class="primary" id="btnPushLayoutJson" style="flex:0;white-space:nowrap;">Push Layout JSON</button>
+        </div>
+      </div>
+      <div class="status-msg" id="ghStatus"></div>
+      <div class="row" style="justify-content:space-between;">
+        <button type="button" id="btnSaveGhConfig">Save Credentials Locally</button>
+        <button type="button" id="btnCloseGithubModal">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const state = {
       page: {
@@ -671,7 +742,6 @@
         });
       }
 
-      // Balloon body
       ctx.beginPath();
       if (b.type === 'caption') {
         ctx.rect(b.x, b.y, b.w, b.h);
@@ -716,7 +786,6 @@
       ctx.strokeStyle = '#111827';
       ctx.stroke();
 
-      // Text
       ctx.fillStyle = '#111827';
       ctx.font = `700 ${b.fontSize || 15}px "Comic Sans MS", "Chalkboard SE", sans-serif`;
       ctx.textAlign = 'center';
@@ -750,7 +819,6 @@
         ctx.setLineDash([]);
 
         if (b.type !== 'caption') {
-          // Amber bend diamond
           ctx.beginPath();
           ctx.moveTo(midX, midY - 7);
           ctx.lineTo(midX + 7, midY);
@@ -763,7 +831,6 @@
           ctx.lineWidth = 1.5;
           ctx.stroke();
 
-          // Blue tail tip handle
           ctx.beginPath();
           ctx.arc(tipX, tipY, 7, 0, Math.PI * 2);
           ctx.fillStyle = '#3b82f6';
@@ -817,7 +884,6 @@
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Panels & clipped art
       state.panels.forEach((p, idx) => {
         ctx.save();
         ctx.beginPath();
@@ -832,7 +898,6 @@
         }
         ctx.restore();
 
-        // Panel border
         const isSel = p.id === state.selectedPanelId && !forExport;
         ctx.lineWidth = isSel ? 3.5 : 2.5;
         ctx.strokeStyle = isSel ? '#3b82f6' : '#111827';
@@ -848,14 +913,12 @@
           ctx.fillText(String(idx + 1), p.x + 12, p.y + 9);
 
           if (isSel) {
-            // Resize handle bottom-right
             ctx.fillStyle = '#3b82f6';
             ctx.fillRect(p.x + p.w - 6, p.y + p.h - 6, 12, 12);
           }
         }
       });
 
-      // Guides (trim & live margin)
       if (!forExport) {
         ctx.save();
         if (m.bleedPx > 0) {
@@ -878,13 +941,11 @@
         ctx.restore();
       }
 
-      // Balloons
       state.balloons.forEach(b => {
         drawBalloon(b, b.id === state.selectedBalloonId, forExport);
       });
     }
 
-    // Canvas Interaction
     let dragging = null;
     let activeStroke = null;
 
@@ -899,7 +960,6 @@
     canvas.addEventListener('mousedown', e => {
       const pos = getMousePos(e);
 
-      // 1. Check selected balloon handles first
       const selB = state.balloons.find(b => b.id === state.selectedBalloonId);
       if (selB && selB.type !== 'caption') {
         const g = getTailGeometry(selB);
@@ -915,7 +975,6 @@
         }
       }
 
-      // 2. Check balloon hit
       for (let i = state.balloons.length - 1; i >= 0; i--) {
         const b = state.balloons[i];
         if (pos.x >= b.x && pos.x <= b.x + b.w && pos.y >= b.y && pos.y <= b.y + b.h) {
@@ -935,7 +994,6 @@
         }
       }
 
-      // 3. Panel selection / resize / sketch
       const selP = state.panels.find(p => p.id === state.selectedPanelId);
       if (selP && Math.abs(pos.x - (selP.x + selP.w)) <= 12 && Math.abs(pos.y - (selP.y + selP.h)) <= 12) {
         pushHistory();
@@ -964,7 +1022,6 @@
           return;
         }
 
-        // Sketching
         pushHistory();
         activeStroke = {
           panelId: hitPanel.id,
@@ -1054,7 +1111,6 @@
       dragging = null;
     });
 
-    // UI Sync & Event Wiring
     function syncUI() {
       const pIdx = state.panels.findIndex(p => p.id === state.selectedPanelId);
       const p = state.panels[pIdx];
@@ -1116,9 +1172,7 @@
       };
     });
 
-    document.getElementById('customColor').oninput = e => {
-      state.color = e.target.value;
-    };
+    document.getElementById('customColor').oninput = e => { state.color = e.target.value; };
     document.getElementById('brushSize').oninput = e => {
       state.brushSize = Number(e.target.value);
       document.getElementById('brushSizeVal').textContent = state.brushSize;
@@ -1373,6 +1427,131 @@
       document.getElementById('pageModal').classList.remove('open');
     };
 
+    // GitHub Direct Sync Logic
+    let pendingAppHtmlContent = null;
+
+    function loadGhConfig() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('comicwerx_gh_cfg') || '{}');
+        if (saved.owner) document.getElementById('ghOwner').value = saved.owner;
+        if (saved.repo) document.getElementById('ghRepo').value = saved.repo;
+        if (saved.branch) document.getElementById('ghBranch').value = saved.branch;
+        if (saved.token) document.getElementById('ghToken').value = saved.token;
+      } catch (e) {}
+    }
+
+    function saveGhConfig() {
+      const cfg = {
+        owner: document.getElementById('ghOwner').value.trim(),
+        repo: document.getElementById('ghRepo').value.trim() || 'comicwerx',
+        branch: document.getElementById('ghBranch').value.trim() || 'main',
+        token: document.getElementById('ghToken').value.trim()
+      };
+      localStorage.setItem('comicwerx_gh_cfg', JSON.stringify(cfg));
+      return cfg;
+    }
+
+    function setGhStatus(msg, isError = false) {
+      const el = document.getElementById('ghStatus');
+      el.textContent = msg;
+      el.className = 'status-msg ' + (isError ? 'err' : 'ok');
+    }
+
+    function utf8ToBase64(str) {
+      const bytes = new TextEncoder().encode(str);
+      let bin = '';
+      for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+      return btoa(bin);
+    }
+
+    async function pushFileToGithub(filePath, contentString, commitMessage) {
+      const cfg = saveGhConfig();
+      if (!cfg.owner || !cfg.repo || !cfg.token) {
+        setGhStatus('Please enter your GitHub Username, Repository Name, and Personal Access Token.', true);
+        return;
+      }
+
+      setGhStatus('Connecting to GitHub...', false);
+      const apiUrl = `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${filePath}`;
+      const headers = {
+        'Authorization': `Bearer ${cfg.token}`,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      };
+
+      try {
+        let sha = null;
+        const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(cfg.branch)}`, { headers });
+        if (getRes.ok) {
+          const existing = await getRes.json();
+          sha = existing.sha;
+        }
+
+        const body = {
+          message: commitMessage,
+          content: utf8ToBase64(contentString),
+          branch: cfg.branch
+        };
+        if (sha) body.sha = sha;
+
+        const putRes = await fetch(apiUrl, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify(body)
+        });
+
+        if (!putRes.ok) {
+          const errData = await putRes.json().catch(() => ({}));
+          throw new Error(errData.message || `HTTP ${putRes.status}`);
+        }
+
+        const result = await putRes.json();
+        setGhStatus(`Success! Committed ${filePath} (${result.commit.sha.slice(0, 7)}) to ${cfg.owner}/${cfg.repo}.`, false);
+      } catch (err) {
+        setGhStatus(`GitHub Push Failed: ${err.message}`, true);
+      }
+    }
+
+    document.getElementById('btnGithubModal').onclick = () => {
+      loadGhConfig();
+      document.getElementById('ghStatus').className = 'status-msg';
+      document.getElementById('githubModal').classList.add('open');
+    };
+    document.getElementById('btnCloseGithubModal').onclick = () => {
+      document.getElementById('githubModal').classList.remove('open');
+    };
+    document.getElementById('btnSaveGhConfig').onclick = () => {
+      saveGhConfig();
+      setGhStatus('Credentials saved to local browser storage.', false);
+    };
+
+    document.getElementById('btnPickAppHtml').onclick = () => {
+      document.getElementById('fileNewAppHtml').click();
+    };
+    document.getElementById('fileNewAppHtml').onchange = e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        pendingAppHtmlContent = ev.target.result;
+        document.getElementById('ghAppFileInputLabel').value = `Ready: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+      };
+      reader.readAsText(file);
+    };
+
+    document.getElementById('btnPushAppHtml').onclick = async () => {
+      const htmlToPush = pendingAppHtmlContent || ('<!DOCTYPE html>
+' + document.documentElement.outerHTML);
+      const msg = document.getElementById('ghAppCommitMsg').value.trim() || 'Update Comicwerx app';
+      await pushFileToGithub('index.html', htmlToPush, msg);
+    };
+
+    document.getElementById('btnPushLayoutJson').onclick = async () => {
+      const path = document.getElementById('ghLayoutPath').value.trim() || 'layouts/page-01.json';
+      const payload = JSON.stringify({ page: state.page, panels: state.panels, balloons: state.balloons }, null, 2);
+      await pushFileToGithub(path, payload, `Save layout ${path}`);
+    };
+
     // Zoom, Undo, Save, Load, Export
     document.getElementById('btnZoomIn').onclick = () => {
       state.zoom = Math.min(2.5, +(state.zoom + 0.1).toFixed(2));
@@ -1439,7 +1618,6 @@
       render(false);
     };
 
-    // Boot
     updateCanvasSize();
     initGrid('4');
   </script>

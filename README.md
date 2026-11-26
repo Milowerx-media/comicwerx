@@ -8,18 +8,12 @@ A lightweight, zero-dependency comic book rough layout, thumbnailing, and letter
 - Dynamic Panel Grid & Frame Editor: Generate 1- to 9-panel layouts, split panels horizontally or vertically, add floating inset panels, drag-to-reposition or resize frames, and attach per-panel shot/script notes.
 - Clipped Per-Panel Rough Sketching: Sketch rough thumbnails with Non-Photo Blue (#4da6ff), Layout Red, Graphite, Ink Black, or custom swatches using the Pencil, Straight Line, Box, Oval, and Eraser tools—automatically clipped inside the active panel borders.
 - Dial-In Word Balloons with Bendable Tails: Place Speech Balloons, Thought Clouds, Shout Bursts, and Narrative Caption Boxes. Aim tails using the canvas tip handle or polar angle/reach inputs, and bend or bow tails smoothly along a quadratic Bezier curve using the amber midpoint diamond or the Tail Bend slider.
-- Local Export & Save: Export clean PNG pages (with an option to hide Non-Photo Blue rough lines) and save/reload layouts locally as .json files.
+- Built-In GitHub Direct Sync: Save a GitHub Personal Access Token locally in your browser and push updated index.html builds or comic layout .json files directly to your GitHub repository without touching the terminal.
 
 ## Quick Start
 
-Because Comicwerx has zero build steps or external dependencies, you can run it immediately:
-
-1. Clone the repository:
-   git clone https://github.com/YOUR_USERNAME/comicwerx.git
-   cd comicwerx
-
-2. Open index.html directly in any modern browser, or serve it locally:
-   python3 -m http.server 8080
+1. Clone or download this repository.
+2. Open index.html directly in any modern browser, or host it free on GitHub Pages.
 
 ## Deploying to GitHub Pages
 
