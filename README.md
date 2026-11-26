@@ -13,7 +13,7 @@ A lightweight, zero-dependency comic book rough layout, thumbnailing, and letter
 
 ## Deploying to GitHub Pages
 
-1. Upload these repository files to GitHub.
+1. Upload these repository files to the root of your GitHub repository.
 2. Open Settings -> Pages in your GitHub repository.
 3. Under Build and deployment, set Source to Deploy from a branch, select main and / (root), and click Save.
 4. Your live app will be published at https://YOUR_USERNAME.github.io/comicwerx/.
